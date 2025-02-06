@@ -1,5 +1,13 @@
 import { useState, useMemo } from "react";
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import {
+    View,
+    Text,
+    FlatList,
+    TouchableOpacity,
+    TextInput,
+} from "react-native";
+
+import dayjs from "dayjs";
 import { cn } from "@/lib/utils";
 
 const months = [
@@ -29,6 +37,13 @@ export default function Sheet() {
     const [activeMonth, setActiveMonth] = useState<(typeof months)[number]>(
         months[0],
     );
+
+    const [date, setDate] = useState(dayjs());
+    const [className, setClassName] = useState("");
+    const [lectureName, setLectureName] = useState("");
+    const [result, setResult] = useState("10/11");
+
+    //TODO: in the setResult we need to calculate the percentage of attendance in the format 30/40
 
     const listHeaderComponent = useMemo(() => {
         return (
@@ -66,7 +81,57 @@ export default function Sheet() {
                     )}
                 />
 
-                <View className="h-10 w-full flex-row items-center justify-between gap-2 bg-c-light-purple px-4">
+                <View className="flex-col items-center justify-between gap-2 px-4">
+                    <View className="flex-row items-center justify-between gap-2">
+                        <TextInput
+                            placeholder="Date"
+                            className="flex-1 rounded-lg border border-black font-bold text-black px-4 py-3"
+                            placeholderTextColor="black"
+                            value={date.format("DD")}
+                            keyboardType="default"
+                            selectionColor="black"
+                            cursorColor="black"
+                            onChangeText={(text) => setDate(dayjs(text))}
+                        />
+
+                        <TextInput
+                            placeholder="Class"
+                            className="flex-1 rounded-lg border border-black font-bold text-black px-4 py-3"
+                            placeholderTextColor="black"
+                            value={className}
+                            keyboardType="default"
+                            selectionColor="black"
+                            cursorColor="black"
+                            onChangeText={(text) => setClassName(text)}
+                        />
+                    </View>
+
+                    <View className="flex-row items-center justify-between gap-2">
+                        <TextInput
+                            placeholder="Lecture Name"
+                            className="flex-1 rounded-lg border border-black font-bold text-black px-4 py-3"
+                            placeholderTextColor="black"
+                            value={lectureName}
+                            keyboardType="default"
+                            selectionColor="black"
+                            cursorColor="black"
+                            onChangeText={(text) => setLectureName(text)}
+                        />
+
+                        <TextInput
+                            placeholder="Result"
+                            className="flex-1 rounded-lg border border-black font-bold text-black px-4 py-3"
+                            placeholderTextColor="black"
+                            value={`P/A: ${result}`}
+                            keyboardType="default"
+                            selectionColor="black"
+                            cursorColor="black"
+                            editable={false}
+                        />
+                    </View>
+                </View>
+
+                <View className="h-10 w-full flex-row items-center justify-between gap-2 bg-c-purple px-4">
                     <Text className="text-left text-lg font-medium">
                         Roll No
                     </Text>
@@ -79,22 +144,31 @@ export default function Sheet() {
                 </View>
             </View>
         );
-    }, [activeMonth]);
+    }, [activeMonth, className, date, lectureName, result]);
 
     return (
         <FlatList
             data={attendance}
             keyExtractor={(item) => item.rollNo.toString()}
+            ItemSeparatorComponent={() => <View className="h-px bg-black" />}
             renderItem={({ item }) => (
-                <View className="flex-row items-center justify-between border-b border-gray-300 px-4 py-2">
-                    <Text className="text-left text-base" style={{ width: 45 }}>
+                <View
+                    className={cn(
+                        "mx-2 my-1 flex-row items-center justify-between rounded-lg px-4 py-2",
+                        item.attendance === 1 ? "bg-green-500" : "bg-red-600",
+                    )}
+                >
+                    <Text
+                        className="text-left text-base font-bold text-white"
+                        style={{ width: 45 }}
+                    >
                         {item.rollNo}
                     </Text>
-                    <Text className="flex-1 text-center text-base">
+                    <Text className="flex-1 text-center text-base font-bold text-white">
                         {item.name}
                     </Text>
                     <Text
-                        className="text-center text-base"
+                        className="text-center text-base font-bold text-white"
                         style={{ width: 45 }}
                     >
                         {item.attendance === 1 ? "P" : "A"}

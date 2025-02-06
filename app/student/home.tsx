@@ -1,18 +1,15 @@
 import { useState } from "react";
-import {
-    View,
-    Text,
-    TextInput,
-    ScrollView,
-    TouchableOpacity,
-} from "react-native";
-import { FontAwesome } from "@/lib/icons";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import DigitalClock from "@/components/digital-clock";
 
+import { FontAwesome } from "@/lib/icons";
+import { subjects } from "@/data/subjects";
+import { teachers } from "@/data/teacher";
+
 export default function Home() {
-    const [lectureName, setLectureName] = useState("");
-    const [lectureClass, setLectureClass] = useState("");
-    const [lectureTime, setLectureTime] = useState("");
+    const [subject, setSubject] = useState("HCI");
+    const [teacherInitials, setTeacherInitials] = useState("JJ");
 
     return (
         <ScrollView
@@ -32,36 +29,61 @@ export default function Home() {
             </Text>
 
             <View className="mt-5 flex w-full flex-row gap-4 px-4">
-                <TextInput
-                    placeholder="Lecture Name"
-                    className="flex-1 rounded-lg border border-black bg-c-purple font-bold text-white"
-                    placeholderTextColor="white"
-                    value={lectureName}
-                    keyboardType="default"
-                    selectionColor="white"
-                    cursorColor="white"
-                    onChangeText={(text) => setLectureName(text)}
-                />
-                <TextInput
-                    placeholder="Lecture Class"
-                    className="flex-1 rounded-lg border border-black bg-c-purple font-bold text-white"
-                    placeholderTextColor="white"
-                    value={lectureClass}
-                    keyboardType="default"
-                    selectionColor="white"
-                    cursorColor="white"
-                    onChangeText={(text) => setLectureClass(text)}
-                />
-                <TextInput
-                    placeholder="Lecture Time"
-                    className="flex-1 rounded-lg border border-black bg-c-purple font-bold text-white"
-                    value={lectureTime}
-                    onChangeText={(text) => setLectureTime(text)}
-                    placeholderTextColor="white"
-                    keyboardType="default"
-                    selectionColor="white"
-                    cursorColor="white"
-                />
+                <View className="flex-1 overflow-hidden rounded-lg border border-black bg-c-purple">
+                    <Picker
+                        style={{
+                            color: "white",
+                            fontWeight: "700",
+                        }}
+                        dropdownIconColor="white"
+                        onValueChange={(value: string) => {
+                            setSubject(value);
+                        }}
+                        selectedValue={subject}
+                    >
+                        {subjects.map((subj) => (
+                            <Picker.Item
+                                style={{
+                                    fontWeight: "700",
+                                    backgroundColor:
+                                        subject === subj
+                                            ? "#5B4B8A"
+                                            : "transparent",
+                                }}
+                                key={subj}
+                                label={subj}
+                                value={subj}
+                            />
+                        ))}
+                    </Picker>
+                </View>
+
+                <View className="flex-1 overflow-hidden rounded-lg border border-black bg-c-purple">
+                    <Picker
+                        style={{ color: "white", fontWeight: "700" }}
+                        dropdownIconColor="white"
+                        onValueChange={(value: string) => {
+                            setTeacherInitials(value);
+                        }}
+                        placeholder="Select Teacher Initials"
+                        selectedValue={teacherInitials}
+                    >
+                        {teachers.map((t) => (
+                            <Picker.Item
+                                style={{
+                                    fontWeight: "700",
+                                    backgroundColor:
+                                        teacherInitials === t
+                                            ? "#5B4B8A"
+                                            : "transparent",
+                                }}
+                                key={t}
+                                label={t}
+                                value={t}
+                            />
+                        ))}
+                    </Picker>
+                </View>
             </View>
 
             <DigitalClock className="mt-10" />
@@ -82,7 +104,7 @@ export default function Home() {
                     />
                     <View className="flex flex-col items-center justify-center gap-0">
                         <Text className="text-xl font-bold leading-none text-white">
-                            Start
+                            Join
                         </Text>
                         <Text className="text-xl font-bold leading-none text-white">
                             Session

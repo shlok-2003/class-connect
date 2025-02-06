@@ -6,13 +6,17 @@ import {
     ScrollView,
     TouchableOpacity,
 } from "react-native";
-import { FontAwesome } from "@/lib/icons";
+import { Picker } from "@react-native-picker/picker";
+import * as LocalAuthentication from "expo-local-authentication";
+
 import DigitalClock from "@/components/digital-clock";
+import { FontAwesome } from "@/lib/icons";
+import { subjects } from "@/data/subjects";
+import { classes } from "@/data/class";
 
 export default function Home() {
-    const [lectureName, setLectureName] = useState("");
-    const [lectureClass, setLectureClass] = useState("");
-    const [lectureTime, setLectureTime] = useState("");
+    const [subject, setSubject] = useState("HCI");
+    const [lectureClass, setLectureClass] = useState("TE COMP A");
 
     return (
         <ScrollView
@@ -31,7 +35,13 @@ export default function Home() {
                 <TouchableOpacity
                     className="h-48 w-48 items-center justify-center gap-4 rounded-full bg-c-purple pt-5 shadow-xl shadow-black"
                     style={{ elevation: 10 }}
-                    onPress={() => {}}
+                    onPress={() => {
+                        LocalAuthentication.authenticateAsync({
+                            biometricsSecurityLevel: "strong",
+                            disableDeviceFallback: true,
+                        });
+                        console.log("pressed");
+                    }}
                     activeOpacity={0.8}
                 >
                     <FontAwesome
@@ -53,36 +63,56 @@ export default function Home() {
             </View>
 
             <View className="mt-3 flex w-full flex-row gap-4 px-4">
-                <TextInput
-                    placeholder="Lecture Name"
-                    className="flex-1 rounded-lg border border-black bg-c-purple font-bold text-white"
-                    placeholderTextColor="white"
-                    value={lectureName}
-                    keyboardType="default"
-                    selectionColor="white"
-                    cursorColor="white"
-                    onChangeText={(text) => setLectureName(text)}
-                />
-                <TextInput
-                    placeholder="Lecture Class"
-                    className="flex-1 rounded-lg border border-black bg-c-purple font-bold text-white"
-                    placeholderTextColor="white"
-                    value={lectureClass}
-                    keyboardType="default"
-                    selectionColor="white"
-                    cursorColor="white"
-                    onChangeText={(text) => setLectureClass(text)}
-                />
-                <TextInput
-                    placeholder="Lecture Time"
-                    className="flex-1 rounded-lg border border-black bg-c-purple font-bold text-white"
-                    value={lectureTime}
-                    onChangeText={(text) => setLectureTime(text)}
-                    placeholderTextColor="white"
-                    keyboardType="default"
-                    selectionColor="white"
-                    cursorColor="white"
-                />
+                <View className="flex-1 overflow-hidden rounded-lg border border-black bg-c-purple">
+                    <Picker
+                        style={{ color: "white", fontWeight: "700" }}
+                        dropdownIconColor="white"
+                        onValueChange={(value: string) => {
+                            setSubject(value);
+                        }}
+                        selectedValue={subject}
+                    >
+                        {subjects.map((subj) => (
+                            <Picker.Item
+                                style={{
+                                    fontWeight: "700",
+                                    backgroundColor:
+                                        subject === subj
+                                            ? "#5B4B8A"
+                                            : "transparent",
+                                }}
+                                key={subj}
+                                label={subj}
+                                value={subj}
+                            />
+                        ))}
+                    </Picker>
+                </View>
+                <View className="flex-1 overflow-hidden rounded-lg border border-black bg-c-purple">
+                    <Picker
+                        style={{ color: "white", fontWeight: "700" }}
+                        dropdownIconColor="white"
+                        onValueChange={(value: string) => {
+                            setLectureClass(value);
+                        }}
+                        selectedValue={lectureClass}
+                    >
+                        {classes.map((clas) => (
+                            <Picker.Item
+                                style={{
+                                    fontWeight: "700",
+                                    backgroundColor:
+                                        lectureClass === clas
+                                            ? "#5B4B8A"
+                                            : "transparent",
+                                }}
+                                key={clas}
+                                label={clas}
+                                value={clas}
+                            />
+                        ))}
+                    </Picker>
+                </View>
             </View>
         </ScrollView>
     );

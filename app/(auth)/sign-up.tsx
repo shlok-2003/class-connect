@@ -123,6 +123,7 @@ export default function SignUp() {
                                     <Picker.Item
                                         label="Select Class"
                                         value=""
+                                        enabled={false}
                                     />
                                     {Object.keys(data).map((className) => (
                                         <Picker.Item
@@ -145,6 +146,7 @@ export default function SignUp() {
                                     <Picker.Item
                                         label="Select Section"
                                         value=""
+                                        enabled={false}
                                     />
                                     {sections.map((section) => (
                                         <Picker.Item
