@@ -18,6 +18,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
 
+app.get("/", (req, res) => {
+    res.send("Hello World");
+});
+
 app.listen(PORT, (error) => {
     if (error) {
         console.log(error);
