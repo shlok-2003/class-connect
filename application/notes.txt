@@ -1,0 +1,3 @@
+// For student, Student ID is unique
+// For teacher, Teacher Initials is unique
+
